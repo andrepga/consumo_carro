@@ -1,0 +1,278 @@
+# Classe Carro
+class Carro:
+    # Método que atribui os valores  atributos do objeto carro
+    def __init__(self, modelo, tanque, consumo):
+        self.modelo = modelo
+        self.consumo = consumo
+        self.tanque = tanque
+        self.nivel = 0
+
+    # Método que imprime a quantidade de combustivel no tanque
+    def __nivel_atual__(self):
+        print("A volume atual de combustível é: %.2f L para o modelo %s" % (self.nivel, self.modelo))
+
+    # Método que atualiza a quantidade do nível de combustível no tanque depois de abastecer
+    def __abastecer__(self, volume):
+        volume = volume + self.nivel
+        if self.tanque >= volume:
+            self.nivel = volume
+            self.__nivel_atual__()
+        else:
+            print("Volume de combustível inválido, pois excede capacidade do tanque.")
+
+    # Método que atualiza o volume de combustível no tanque depois de um deslocamento
+    def __mover__(self, distancia):
+        consumo_trecho = distancia / self.consumo
+        if consumo_trecho <= self.nivel:
+            self.nivel = self.nivel - consumo_trecho
+            if self.nivel < self.tanque * 0.15:
+                print("O nível do tanque está baixo após a viagem, abasteça.")
+            self.__nivel_atual__()
+        else:
+            print("O trecho a ser percorrido é muito longo para o volume de combustível no tanque."
+                  "O deslocamento não pode ser registrado")
+
+    # Método verifica se o modelo do carro já foi inserido
+    def __verifica_modelo_inserido__(self, modelo_verifica):
+        if self.modelo in modelo_verifica:
+            return True
+        else:
+            return False
+
+    # Método imprime os dados do carro
+    def __imprime_dados_carro__(self):
+        print("Modelo:", self.modelo, "\tTanque:", str(self.tanque), "\tConsumo:", str(self.consumo),
+              "\tVolume de Combustível:", str(self.nivel))
+
+    def __modifica_consumo__(self, consumo_altera):
+        self.consumo = consumo_altera
+
+
+# Verifica se a opção escolhida pelo usuário e válida
+def valida_opcao_menu(opcao_escolhida):
+    if opcao_escolhida.isdecimal():
+        opcao_escolhida_num = int(opcao_escolhida)
+        if 1 <= opcao_escolhida_num <= 7:
+            return True
+    print("Opção inválida, selecione opções de 1 a 6")
+    return False
+
+
+# Verifica se o modelo já foi inserido pelo usuário
+def entrada_modelo(carro_insere):
+    modelo_str = None
+    modelo_inserido = False
+    while not modelo_inserido:
+        modelo_str = input("Digite o modelo do carro: \n").lower()
+        if len(carro_insere) > 0:
+            for i in range(0, len(carro_insere)):
+                if carro_insere[i].__verifica_modelo_inserido__(modelo_str):
+                    print("O modelo ja foi inserido.")
+                else:
+                    modelo_inserido = True
+        else:
+            modelo_inserido = True
+
+    return modelo_str
+
+
+# Verifica o volume [l] do tanque digitado pelo usuário é válido
+def entrada_tanque():
+    tanque_inserido = False
+    tanque_num = 0
+    while not tanque_inserido:
+        tanque_str = input("Digite volume do tanque: \n")
+        try:
+            tanque_num = float(tanque_str)
+        except:
+            print("O volume deve ser um número e as casas decimais separadas por '.'. Ex:40.5 ")
+            continue
+
+        if 30 <= tanque_num <= 100:
+            tanque_inserido = True
+        else:
+            print("Verifique o volume do tanque deve estar entre 30 l a 100 l")
+    return tanque_num
+
+
+# Verifica se o consumo [Km/l] digitado pelo usuário é válido
+def entrada_consumo():
+    consumo_inserido = False
+    consumo_num = 0
+    while not consumo_inserido:
+        consumo_str = input("Digite o consumo do carro [km/l]: \n")
+        try:
+            consumo_num = float(consumo_str)
+        except:
+            print("O consumo deve ser um número e as casas decimais separadas por '.'. Ex:15.2 ")
+            continue
+        if 2 <= consumo_num <= 25:
+            consumo_inserido = True
+        else:
+            print("Verifique o volume do tanque deve estar entre 2 a 20 km/l")
+    return consumo_num
+
+
+# Verifica se o volume de combustível[l] digitado pelo usuário é válido
+def entrada_volume_comb():
+    volume_inserido = False
+    volume_num = 0
+    while not volume_inserido:
+        voloume_str = input("Digite volume de combustível [l]: \n")
+        try:
+            volume_num = float(voloume_str)
+        except:
+            print("O volume de combustível é número e as casas decimais separadas por '.'. Ex:20.1 ")
+            continue
+        if 0 < volume_num <= 126:
+            volume_inserido = True
+        else:
+            print("O volume de combustível deve ser maior que 0 e menor ou igual a 126 l.")
+    return volume_num
+
+
+# Verifica se o a distância digitado pelo usuário é válida
+def entrada_distancia():
+    distancia_inserida = False
+    distancia_num = 0
+    while not distancia_inserida:
+        distancia_str = input("Digite a distância se ser percorrida [Km]: \n")
+        try:
+            distancia_num = float(distancia_str)
+        except:
+            print("A distância é número e as casas decimais separadas por '.'. Ex:50.7 ")
+            continue
+        if 0 < distancia_num < 1000:
+            distancia_inserida = True
+        else:
+            print("A distância a deve ser maior que 0 e menor que 1000 Km")
+    return distancia_num
+
+
+# Cadastro de carros onde é registrado o modelo, o volume do tanque e o consumo.
+# É possivel cadastrar apenas um carro de cada modelo(simplificação).
+def cadastro_carro(carro_reg):
+    modelo = entrada_modelo(carro_reg)
+
+    tanque = entrada_tanque()
+
+    consumo = entrada_consumo()
+
+    # Adiciona novo modelo a lista veiculos através da criação de um objeto da classe carros
+    carro_reg.append(Carro(modelo, tanque, consumo))
+
+
+# Registra o abastecimento de um carro cadastrado.
+def registra_abastecimento(carro_abast):
+    modelo_procurado = input("Digite o modelo do carro: ")
+    if len(carro_abast) > 0:
+        for i in range(0, len(carro_abast)):
+            if carro_abast[i].__verifica_modelo_inserido__(modelo_procurado):
+                volume_dig = entrada_volume_comb()
+                carro_abast[i].__abastecer__(volume_dig)
+                break
+            if i == len(carro_abast) - 1:
+                print("Carro não cadstrado.")
+    else:
+        print("Não há carro cadastrado.")
+
+
+# Atualiza o volume do tanque de combustível após o deslocamento.
+# A distância é fornecida pelo usuário e o carro cadastrado
+def registra_deslocamento(carro_des):
+    modelo_procurado = input("Digite o modelo do carro: ")
+    if len(carro_des) > 0:
+        for i in range(0, len(carro_des)):
+            if carro_des[i].__verifica_modelo_inserido__(modelo_procurado):
+                distancia_dig = entrada_distancia()
+                carro_des[i].__mover__(distancia_dig)
+                break
+            if i == len(carro_des) - 1:
+                print("Carro não cadstrado.")
+    else:
+        print("Não há carro cadastrado.")
+
+
+# Imprime o nivel de combustível de um carro cadastrado.
+def mostra_nivel(carros_impr):
+    modelo_procurado = input("Digite o modelo do carro: ")
+    if len(carros_impr) > 0:
+        for i in range(0, len(carros_impr)):
+            if carros_impr[i].__verifica_modelo_inserido__(modelo_procurado):
+                carros_impr[i].__nivel_atual__()
+                break
+            if i == len(carros_impr) - 1:
+                print("Carro não cadstrado.")
+    else:
+        print("Não há carro cadastrado.")
+
+
+# Imprime os dados de todos carros cadastrados
+def imprime_dados(carros_impr):
+    if len(carros_impr) > 0:
+        print("Dados dos carros registrados:".center(80, "*"))
+        for i in range(0, len(carros_impr)):
+            carros_impr[i].__imprime_dados_carro__()
+    else:
+        print("Não há carro cadastrado.")
+
+
+# Atualiza consumo de combustível
+def atualiza_consumo(carros_cons):
+    modelo_procurado = input("Digite o modelo do carro: ")
+    if len(carros_cons) > 0:
+        for i in range(0, len(carros_cons)):
+            if carros_cons[i].__verifica_modelo_inserido__(modelo_procurado):
+                consumo_novo = entrada_consumo()
+                carros_cons[i].__modifica_consumo__(consumo_novo)
+                break
+            if i == len(carros_cons) - 1:
+                print("Carro não cadstrado.")
+    else:
+        print("Não há carro cadastrado.")
+
+
+#  Classe Main
+continua = True
+carros = []
+
+while continua:
+
+    # Apresenta as opções para o usuario
+    print("O que deseja? Escolha a opção conforme o menu:".center(80, "*"))
+    print("1- Casdatrar um carro.")
+    print("2- Registrar abastecimento de um carro.")
+    print("3- Atualizar o volume de combustivel após um deslocamento.")
+    print("4- Verificar o volume de combustível do carro.")
+    print("5- Imprimir os dados de todos carros casdastrados.")
+    print("6- Atualizar consumo do carro")
+    print("7- Sair\n")
+    # Aguarda a entrada do usuario
+    opcao_menu = input()
+    # verifica se a entrada do usuario é válida
+    entrada_menu = valida_opcao_menu(opcao_menu)
+    # Caso entrada seja válida
+    if entrada_menu:
+        opcao_menu = int(opcao_menu)
+        # Cadastra carro, permitido apenas um carro de cada modelo
+        if opcao_menu == 1:
+            cadastro_carro(carros)
+        # Registra abastacimento de carro já registrado
+        elif opcao_menu == 2:
+            registra_abastecimento(carros)
+        # Atualiza o volume de combustivel após um deslocamento.
+        elif opcao_menu == 3:
+            registra_deslocamento(carros)
+        # Mostra o nível de tanque de combustível do carro
+        elif opcao_menu == 4:
+            mostra_nivel(carros)
+        # Imprime os dados de todos carros cadastrados
+        elif opcao_menu == 5:
+            imprime_dados(carros)
+        elif opcao_menu == 6:
+            atualiza_consumo(carros)
+        # Sai do programa
+        elif opcao_menu == 7:
+            continua = False
+        else:
+            print("Algo errado, procure administrador ):!!")
