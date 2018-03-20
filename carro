@@ -54,7 +54,7 @@ def valida_opcao_menu(opcao_escolhida):
         opcao_escolhida_num = int(opcao_escolhida)
         if 1 <= opcao_escolhida_num <= 7:
             return True
-    print("Opção inválida, selecione opções de 1 a 6")
+    print("Opção inválida, selecione opções de 1 a 7")
     return False
 
 
