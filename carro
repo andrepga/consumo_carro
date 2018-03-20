@@ -7,7 +7,7 @@ class Carro:
         self.tanque = tanque
         self.nivel = 0
 
-    # Método que imprime a quantidade de combustivel no tanque
+    # Método que imprime a volume de combustivel no tanque
     def __nivel_atual__(self):
         print("A volume atual de combustível é: %.2f L para o modelo %s" % (self.nivel, self.modelo))
 
