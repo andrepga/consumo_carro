@@ -58,7 +58,7 @@ def valida_opcao_menu(opcao_escolhida):
     return False
 
 
-# Verifica se o modelo já foi inserido pelo usuário
+# Verifica se o modelo já foi inserido pelo usuário mud
 def entrada_modelo(carro_insere):
     modelo_str = None
     modelo_inserido = False
